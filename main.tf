@@ -184,16 +184,17 @@ moved {
 resource "azurerm_virtual_machine" "vm_windows" {
   count = local.is_windows ? var.nb_instances : 0
 
-  location                      = local.location
-  name                          = replace(replace(var.name_template_vm_windows, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index)
-  network_interface_ids         = [element(azurerm_network_interface.vm[*].id, count.index)]
-  resource_group_name           = var.resource_group_name
-  vm_size                       = var.vm_size
-  availability_set_id           = try(azurerm_availability_set.vm[0].id, null)
-  delete_os_disk_on_termination = var.delete_os_disk_on_termination
-  license_type                  = var.license_type
-  tags                          = var.tags
-  zones                         = var.zone == null ? null : [var.zone]
+  location                         = local.location
+  name                             = replace(replace(var.name_template_vm_windows, "$${vm_hostname}", var.vm_hostname), "$${host_number}", count.index)
+  network_interface_ids            = [element(azurerm_network_interface.vm[*].id, count.index)]
+  resource_group_name              = var.resource_group_name
+  vm_size                          = var.vm_size
+  availability_set_id              = try(azurerm_availability_set.vm[0].id, null)
+  delete_data_disks_on_termination = var.delete_data_disks_on_termination
+  delete_os_disk_on_termination    = var.delete_os_disk_on_termination
+  license_type                     = var.license_type
+  tags                             = var.tags
+  zones                            = var.zone == null ? null : [var.zone]
 
   storage_os_disk {
     create_option     = "FromImage"
